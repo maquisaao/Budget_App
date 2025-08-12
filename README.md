@@ -21,63 +21,45 @@
  ![GitHub Stats](https://github-readme-stats.vercel.app/api?username=maquisaao&theme=transparent&bg_color=000&border_color=30A3DC&show_icons=true&icon_color=30A3DC&title_color=E94D5F&text_color=FFF)
  
  
-BudgetCell
-Projeto em desenvolvimento para facilitar a pesquisa e cálculo de valores de peças de celular usadas em assistência técnica.
+# 📱 BudgetCell
 
-Descrição
-O BudgetCell é uma ferramenta que automatiza a busca por preços de peças em distribuidores online, facilitando o orçamento rápido para técnicos de celulares. O aplicativo realiza login no site do distribuidor, busca as peças baseadas na descrição do defeito, marca e modelo, e apresenta os resultados para o usuário.
+> Ferramenta em desenvolvimento para facilitar a pesquisa e cálculo de valores de peças de celular para técnicos de assistência técnica.
 
-Funcionalidades atuais
-Recebe entrada do usuário (marca, modelo e defeito do aparelho)
+---
 
-Realiza login seguro usando credenciais armazenadas em arquivo .env
+## 🔍 Sobre o Projeto
 
-Busca e exibe os principais resultados de peças no distribuidor
+O **BudgetCell** automatiza a busca por preços de peças em distribuidores online, ajudando técnicos a realizarem orçamentos rápidos e precisos.
 
-Permite a escolha da peça desejada
+Ele realiza login seguro, busca peças pelo defeito, marca e modelo do aparelho, e apresenta preços com cálculo automático para diferentes formas de pagamento.
 
-Calcula o valor final baseado no preço da peça multiplicado por 3
+---
 
-Apresenta opções de pagamento com acréscimos para Pix (+10%), cartão (+20%) e dinheiro (preço normal)
+## ⚙️ Funcionalidades Atuais
 
-Loop para novas buscas até o usuário decidir encerrar
+- ✅ Entrada interativa: marca, modelo e defeito do aparelho  
+- ✅ Login seguro usando variáveis de ambiente (`.env`)  
+- ✅ Busca e exibição dos principais resultados no distribuidor  
+- ✅ Seleção da peça desejada pelo usuário  
+- ✅ Cálculo do preço final (preço da peça x 3)  
+- ✅ Apresentação das opções de pagamento:  
+  - Pix (+10%)  
+  - Cartão (+20%)  
+  - Dinheiro (valor normal)  
+- ✅ Loop para realizar várias buscas em sequência
 
-Próximos passos e possibilidades futuras
-Implementar interface gráfica para facilitar o uso
+---
 
-Adicionar suporte para múltiplos distribuidores
+## 🚀 Possíveis Funcionalidades Futuras
 
-Criar sistema de armazenamento local dos orçamentos realizados
+- 🎨 Interface gráfica amigável (GUI) para facilitar o uso  
+- 🌐 Suporte a múltiplos distribuidores simultaneamente  
+- 💾 Armazenamento local e histórico de orçamentos  
+- 📄 Exportação de orçamentos em PDF para clientes  
+- 🔐 Autenticação avançada (OAuth, tokens, etc)  
+- 📱 Versão mobile para uso direto em campo  
+- ⏰ Atualização automática dos preços com agendamento  
+- 📲 Integração com WhatsApp/SMS para envio direto dos orçamentos
 
-Exportar relatórios em PDF para clientes
+---
 
-Implementar autenticação via OAuth ou outros métodos seguros
-
-Construir versão mobile para acesso rápido em campo
-
-Automatizar atualizações dos preços com agendamento
-
-Integrar notificações via WhatsApp ou SMS para envio dos orçamentos aos clientes
-
-Como usar
-Clone este repositório
-
-Crie um arquivo .env na raiz com suas credenciais:
-
-ini
-Copy
-Edit
-EMAIL_LOGIN=seu_email_aqui
-SENHA_LOGIN=sua_senha_aqui
-Instale as dependências:
-
-nginx
-Copy
-Edit
-pip install -r requirements.txt
-Execute o script:
-
-css
-Copy
-Edit
-python main.py

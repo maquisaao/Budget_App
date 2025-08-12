@@ -21,3 +21,63 @@
  ![GitHub Stats](https://github-readme-stats.vercel.app/api?username=maquisaao&theme=transparent&bg_color=000&border_color=30A3DC&show_icons=true&icon_color=30A3DC&title_color=E94D5F&text_color=FFF)
  
  
+BudgetCell
+Projeto em desenvolvimento para facilitar a pesquisa e cálculo de valores de peças de celular usadas em assistência técnica.
+
+Descrição
+O BudgetCell é uma ferramenta que automatiza a busca por preços de peças em distribuidores online, facilitando o orçamento rápido para técnicos de celulares. O aplicativo realiza login no site do distribuidor, busca as peças baseadas na descrição do defeito, marca e modelo, e apresenta os resultados para o usuário.
+
+Funcionalidades atuais
+Recebe entrada do usuário (marca, modelo e defeito do aparelho)
+
+Realiza login seguro usando credenciais armazenadas em arquivo .env
+
+Busca e exibe os principais resultados de peças no distribuidor
+
+Permite a escolha da peça desejada
+
+Calcula o valor final baseado no preço da peça multiplicado por 3
+
+Apresenta opções de pagamento com acréscimos para Pix (+10%), cartão (+20%) e dinheiro (preço normal)
+
+Loop para novas buscas até o usuário decidir encerrar
+
+Próximos passos e possibilidades futuras
+Implementar interface gráfica para facilitar o uso
+
+Adicionar suporte para múltiplos distribuidores
+
+Criar sistema de armazenamento local dos orçamentos realizados
+
+Exportar relatórios em PDF para clientes
+
+Implementar autenticação via OAuth ou outros métodos seguros
+
+Construir versão mobile para acesso rápido em campo
+
+Automatizar atualizações dos preços com agendamento
+
+Integrar notificações via WhatsApp ou SMS para envio dos orçamentos aos clientes
+
+Como usar
+Clone este repositório
+
+Crie um arquivo .env na raiz com suas credenciais:
+
+ini
+Copy
+Edit
+EMAIL_LOGIN=seu_email_aqui
+SENHA_LOGIN=sua_senha_aqui
+Instale as dependências:
+
+nginx
+Copy
+Edit
+pip install -r requirements.txt
+Execute o script:
+
+css
+Copy
+Edit
+python main.py

@@ -17,7 +17,6 @@
  ![Vscode](https://img.shields.io/badge/Vscode-007ACC?style=for-the-badge&logo=visual-studio-code&logoColor=white)
 
 
- ![GitHub Stats](https://github-readme-stats.vercel.app/api?username=maquisaao&theme=transparent&bg_color=000&border_color=30A3DC&show_icons=true&icon_color=30A3DC&title_color=E94D5F&text_color=FFF)
 
  ![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=maquisaao&layout=compact&theme=transparent&bg_color=000&title_color=E94D5F&text_color=FFF)
 

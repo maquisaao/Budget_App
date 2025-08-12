@@ -1,8 +1,7 @@
-# Conecte-se comigo 
+## 🚀 Projetos em Destaque
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/maxw-pinheiro/)
-[![Instagram](https://img.shields.io/badge/-Instagram-%23E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/omaxwilson/)
-[![WhatsApp](https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/5548999089562)
+- [BudgetApp By Max]([https://github.com/seu-usuario/budgetapp](https://github.com/maquisaao/Budget_App)) — Aplicativo para orçamentos rápidos de peças de celular com Tkinter e scraping.
+- [Site - Django]([https://github.com/seu-usuario/meusite](https://github.com/maquisaao/Projeto-pyhton-django-1)) — Site de receitas em python e django.
 
 ## Minhas Skills:
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
@@ -84,12 +83,12 @@ O **BudgetApp By Max** é uma aplicação desktop desenvolvida em Python com int
 
 ---
 
-## Contato
-
-Max Wilson – maxwpinheiro@gmail.com
-
----
-
 **Este projeto está em desenvolvimento e será atualizado com novas funcionalidades.**
+
+# Conecte-se comigo 
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/maxw-pinheiro/)
+[![Instagram](https://img.shields.io/badge/-Instagram-%23E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/omaxwilson/)
+[![WhatsApp](https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/5548999089562)
 
 

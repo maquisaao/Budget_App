@@ -2,7 +2,7 @@ import re
 import os
 import httpx
 import tkinter as tk
-from tkinter import messagebox, simpledialog
+from tkinter import messagebox
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 
@@ -48,10 +48,8 @@ def Sugador(info, email, senha, model_device):
                         preco_float = float(preco_str.replace("R$", "").replace(".", "").replace(",", "."))
                     produtos.append((nome, preco_float))
 
-            # ordenar alfabeticamente pelo nome do produto
             produtos.sort(key=lambda x: x[0].lower())
 
-            # limitar a 10 resultados
             return produtos[:10]
 
     except Exception as e:
@@ -69,47 +67,69 @@ def calcular_valores(preco_base):
 class BudgetCellApp:
     def __init__(self, root):
         self.root = root
-        root.title("BudgetCell - Orçamento de Peças")
+        screen_width = root.winfo_screenwidth()
+        screen_height = root.winfo_screenheight()
 
-        # Modelo
+        largura = screen_width // 2
+        altura = screen_height
+
+        # Posicionar a janela no canto direito da tela
+        pos_x = screen_width - largura
+        pos_y = 0
+        root.geometry(f"{largura}x{altura}+{pos_x}+{pos_y}")
+
+        # Configurar expansão das colunas
+        root.grid_columnconfigure(1, weight=1)  # coluna 1 (onde ficam os Entry e Listbox) pode expandir
+
+        # Configurar expansão das linhas para os widgets que ocupam espaço vertical (exemplo: listbox e text)
+        root.grid_rowconfigure(3, weight=1)  # linha do frame da lista
+        root.grid_rowconfigure(5, weight=1)  # linha do resultado_text
+
+        root.title("BudgetApp By Max")
+
         tk.Label(root, text="Modelo do aparelho:").grid(row=0, column=0, sticky="w", padx=5, pady=5)
         self.entry_modelo = tk.Entry(root, width=40)
         self.entry_modelo.grid(row=0, column=1, padx=5, pady=5)
 
-        # Defeito
         tk.Label(root, text="Defeito:").grid(row=1, column=0, sticky="w", padx=5, pady=5)
         self.entry_defeito = tk.Entry(root, width=40)
         self.entry_defeito.grid(row=1, column=1, padx=5, pady=5)
 
-        # Botão buscar
+        self.entry_modelo.bind('<Return>', lambda event: self.buscar_produtos())
+        self.entry_defeito.bind('<Return>', lambda event: self.buscar_produtos())
+
         self.btn_buscar = tk.Button(root, text="Buscar Produtos", command=self.buscar_produtos)
         self.btn_buscar.grid(row=2, column=0, columnspan=2, pady=10)
 
-        # Frame para Listbox + Scrollbar
         frame_lista = tk.Frame(root)
-        frame_lista.grid(row=3, column=0, columnspan=2, padx=5, pady=5)
+        frame_lista.grid(row=3, column=0, columnspan=2, padx=5, pady=5, sticky="nsew")
 
-        # Lista de produtos
         self.listbox = tk.Listbox(frame_lista, width=70, height=10)
-        self.listbox.pack(side=tk.LEFT, fill=tk.BOTH)
+        self.listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
-        # Scrollbar vertical
         self.scrollbar = tk.Scrollbar(frame_lista, orient=tk.VERTICAL)
         self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
-        # Liga scrollbar com listbox
         self.listbox.config(yscrollcommand=self.scrollbar.set)
         self.scrollbar.config(command=self.listbox.yview)
 
         self.listbox.bind('<Double-1>', self.selecionar_produto)
 
-        # Botão escolher
         self.btn_escolher = tk.Button(root, text="Escolher Produto", command=self.selecionar_produto)
         self.btn_escolher.grid(row=4, column=0, columnspan=2, pady=10)
 
-        # Resultado dos valores
-        self.resultado_text = tk.Text(root, width=70, height=7, state='disabled')
-        self.resultado_text.grid(row=5, column=0, columnspan=2, padx=5, pady=5)
+        # Frame para os valores à direita
+        self.frame_valores = tk.Frame(root)
+        self.frame_valores.grid(row=0, column=2, rowspan=6, padx=10, pady=10, sticky="n")
+
+        # Título dos valores
+        self.lbl_valores_titulo = tk.Label(self.frame_valores, text="Valores para o cliente", font=("Arial", 14, "bold"))
+        self.lbl_valores_titulo.pack(pady=(0,10))
+
+    def limpar_valores(self):
+        for widget in self.frame_valores.winfo_children():
+            if widget != self.lbl_valores_titulo:
+                widget.destroy()
 
     def buscar_produtos(self):
         modelo = self.entry_modelo.get().strip()
@@ -120,22 +140,26 @@ class BudgetCellApp:
             return
 
         self.listbox.delete(0, tk.END)
-        self.resultado_text.configure(state='normal')
-        self.resultado_text.delete(1.0, tk.END)
-        self.resultado_text.configure(state='disabled')
+        self.limpar_valores()
+
+        self.resultado_text = None  # remove resultado_text porque não vamos mais usar Text para resultado
+
 
         info = f"{defeito} {modelo}"
 
         produtos = Sugador(info, EMAIL, SENHA, modelo)
 
+        self.entry_modelo.delete(0, tk.END)
+        self.entry_defeito.delete(0, tk.END)
+
         if not produtos:
             messagebox.showinfo("Resultado", "Nenhum produto encontrado.")
             return
 
-        for i, (nome, preco) in enumerate(produtos, 1):
-            self.listbox.insert(tk.END, f"{i}) {nome} - R$ {preco:.2f}")
-
         self.produtos = produtos
+
+        for i, (nome, preco) in enumerate(produtos, 1):
+            self.listbox.insert(tk.END, f"R$ {preco:.2f} - {nome}")
 
     def selecionar_produto(self, event=None):
         selecionado = self.listbox.curselection()
@@ -147,14 +171,23 @@ class BudgetCellApp:
 
         valores = calcular_valores(preco)
 
-        texto = f"Produto escolhido:\n{nome}\n\nValores para o cliente:\n"
-        for forma, valor in valores.items():
-            texto += f"{forma}: R$ {valor:.2f}\n"
+        self.limpar_valores()
 
-        self.resultado_text.configure(state='normal')
-        self.resultado_text.delete(1.0, tk.END)
-        self.resultado_text.insert(tk.END, texto)
-        self.resultado_text.configure(state='disabled')
+        cores = {
+            "Pix": "#a0d468",        # verde claro
+            "Cartão": "#4a89dc",     # azul
+            "Dinheiro": "#ed5565"    # vermelho
+        }
+
+        for forma, valor in valores.items():
+            frame_caixa = tk.Frame(self.frame_valores, bg=cores[forma], bd=2, relief="groove", padx=10, pady=10)
+            frame_caixa.pack(fill='x', pady=5)
+
+            lbl_forma = tk.Label(frame_caixa, text=forma, bg=cores[forma], fg="white", font=("Arial", 12, "bold"))
+            lbl_forma.pack(anchor='w')
+
+            lbl_valor = tk.Label(frame_caixa, text=f"R$ {valor:.2f}", bg=cores[forma], fg="white", font=("Arial", 14))
+            lbl_valor.pack(anchor='w')
 
 if __name__ == "__main__":
     root = tk.Tk()

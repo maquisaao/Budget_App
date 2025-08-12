@@ -1,7 +1,7 @@
 ## 🚀 Projetos em Destaque
 
-- [BudgetApp By Max]([https://github.com/seu-usuario/budgetapp](https://github.com/maquisaao/Budget_App)) — Aplicativo para orçamentos rápidos de peças de celular com Tkinter e scraping.
-- [Site - Django]([https://github.com/seu-usuario/meusite](https://github.com/maquisaao/Projeto-pyhton-django-1)) — Site de receitas em python e django.
+- ![BudgetApp By Max]([https://github.com/seu-usuario/budgetapp](https://github.com/maquisaao/Budget_App)) — Aplicativo para orçamentos rápidos de peças de celular com Tkinter e scraping.
+- ![Site - Django]([https://github.com/seu-usuario/meusite](https://github.com/maquisaao/Projeto-pyhton-django-1)) — Site de receitas em python e django.
 
 ## Minhas Skills:
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)

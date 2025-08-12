@@ -20,46 +20,74 @@
  ## GitHub Stats
  ![GitHub Stats](https://github-readme-stats.vercel.app/api?username=maquisaao&theme=transparent&bg_color=000&border_color=30A3DC&show_icons=true&icon_color=30A3DC&title_color=E94D5F&text_color=FFF)
  
- 
-# 📱 BudgetCell
+ # BudgetApp By Max
 
-> Ferramenta em desenvolvimento para facilitar a pesquisa e cálculo de valores de peças de celular para técnicos de assistência técnica.
-
----
-
-## 🔍 Sobre o Projeto
-
-O **BudgetCell** automatiza a busca por preços de peças em distribuidores online, ajudando técnicos a realizarem orçamentos rápidos e precisos.
-
-Ele realiza login seguro, busca peças pelo defeito, marca e modelo do aparelho, e apresenta preços com cálculo automático para diferentes formas de pagamento.
+**Orçamento rápido e prático para peças de celulares direto do fornecedor**
 
 ---
 
-## ⚙️ Funcionalidades Atuais
+## Sobre
 
-- ✅ Entrada interativa: marca, modelo e defeito do aparelho  
-- ✅ Login seguro usando variáveis de ambiente (`.env`)  
-- ✅ Busca e exibição dos principais resultados no distribuidor  
-- ✅ Seleção da peça desejada pelo usuário  
-- ✅ Cálculo do preço final (preço da peça x 3)  
-- ✅ Apresentação das opções de pagamento:  
-  - Pix (+10%)  
-  - Cartão (+20%)  
-  - Dinheiro (valor normal)  
-- ✅ Loop para realizar várias buscas em sequência
+O **BudgetApp By Max** é uma aplicação desktop desenvolvida em Python com interface gráfica Tkinter que facilita o processo de orçamentos de peças para conserto de celulares. A ferramenta automatiza a consulta dos preços direto do fornecedor via web scraping, calcula valores finais para o cliente com diferentes formas de pagamento e oferece uma interface simples para uso na loja.
 
 ---
 
-## 🚀 Possíveis Funcionalidades Futuras
+## Funcionalidades
 
-- 🎨 Interface gráfica amigável (GUI) para facilitar o uso  
-- 🌐 Suporte a múltiplos distribuidores simultaneamente  
-- 💾 Armazenamento local e histórico de orçamentos  
-- 📄 Exportação de orçamentos em PDF para clientes  
-- 🔐 Autenticação avançada (OAuth, tokens, etc)  
-- 📱 Versão mobile para uso direto em campo  
-- ⏰ Atualização automática dos preços com agendamento  
-- 📲 Integração com WhatsApp/SMS para envio direto dos orçamentos
+- Consulta automática de produtos no site do fornecedor, com autenticação via login.
+- Busca por modelo do aparelho e defeito, retornando até 10 opções filtradas e ordenadas alfabeticamente.
+- Exibição dos resultados em uma lista com scrollbar para fácil navegação.
+- Seleção do produto desejado para cálculo automático dos valores finais.
+- Cálculo do preço final com multiplicador (peça x 3) e três opções de pagamento:
+  - **Pix:** preço com acréscimo de 15%
+  - **Cartão:** preço com acréscimo de 40%
+  - **Dinheiro:** preço com acréscimo de 10%
+- Visualização dos valores finais em caixinhas coloridas identificadas para melhor clareza.
+- Mensagem de "Carregando..." enquanto a consulta está sendo realizada, garantindo feedback para o usuário.
+- Interface responsiva, com suporte para pressionar ENTER para iniciar a busca.
+- Janela redimensionada para preencher metade da tela no lado direito, otimizando o espaço de trabalho.
 
 ---
+
+## Tecnologias utilizadas
+
+- Python 3.x
+- Tkinter (interface gráfica)
+- httpx (requisições HTTP)
+- BeautifulSoup (web scraping)
+- dotenv (gerenciamento de variáveis de ambiente)
+
+---
+
+## Como usar
+
+1. Configure seu login do fornecedor no arquivo `.env` (variáveis `EMAIL_LOGIN` e `SENHA_LOGIN`).
+2. Execute o programa (`python budgetcell_gui.py`).
+3. Informe o modelo e defeito do aparelho e pressione ENTER ou clique em "Buscar Produtos".
+4. Aguarde a mensagem "Carregando..." enquanto os dados são consultados.
+5. Selecione o produto desejado na lista.
+6. Veja os valores finais para o cliente ao lado direito.
+7. Repita o processo para novos orçamentos.
+
+---
+
+## Possíveis melhorias futuras
+
+- Salvar histórico de buscas e orçamentos.
+- Exportar orçamentos para planilhas ou PDF.
+- Implementar login dinâmico via interface para troca rápida de usuário.
+- Adicionar cache local para reduzir consultas repetidas.
+- Criar versão executável instalável para fácil distribuição.
+- Melhorar filtragem dos resultados com sugestões automáticas de modelos.
+
+---
+
+## Contato
+
+Max Wilson – maxwpinheiro@gmail.com
+
+---
+
+**Este projeto está em desenvolvimento e será atualizado com novas funcionalidades.**
+
 

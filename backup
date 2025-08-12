@@ -11,7 +11,7 @@ SENHA = os.getenv("SENHA_LOGIN")
 if not EMAIL or not SENHA:
     raise ValueError("⚠️ Configure EMAIL_LOGIN e SENHA_LOGIN no arquivo .env")
 
-def Sugador(info, email, senha):
+def Sugador(info, email, senha, model_device):
     produtos = []
     try:
         with httpx.Client(base_url="https://flp.distribuidoracp.com.br") as client:
@@ -31,16 +31,25 @@ def Sugador(info, email, senha):
             resultado = BeautifulSoup(busca.text, "html.parser")
             produtos_html = resultado.find_all("div", "product-list")
 
-            for produto in produtos_html[:3]:
+            # palavras do modelo para filtro (minúsculas)
+            palavras_modelo = model_device.lower().split()
+
+            for produto in produtos_html:
                 nome = produto.find("h4").text.strip()
-                preco = produto.find("p", "price").text.strip()
-                preco_valor = re.search(r"R\$[\d\.,]+", preco)
-                preco_float = 0.0
-                if preco_valor:
-                    preco_str = preco_valor.group()
-                    preco_float = float(preco_str.replace("R$", "").replace(".", "").replace(",", "."))
-                produtos.append((nome, preco_float))
-        return produtos
+                nome_lower = nome.lower()
+
+                # verifica se todas as palavras do modelo estão no nome do produto
+                if all(palavra in nome_lower for palavra in palavras_modelo):
+                    preco = produto.find("p", "price").text.strip()
+                    preco_valor = re.search(r"R\$[\d\.,]+", preco)
+                    preco_float = 0.0
+                    if preco_valor:
+                        preco_str = preco_valor.group()
+                        preco_float = float(preco_str.replace("R$", "").replace(".", "").replace(",", "."))
+                    produtos.append((nome, preco_float))
+
+            # limitar a 3 resultados
+            return produtos[:3]
 
     except Exception as e:
         print("❌ Ocorreu um erro:", e)
@@ -68,7 +77,7 @@ def calcular_valores(preco_base):
     return {
         "pix": round(valor_total * 1.15, 2),
         "cartao": round(valor_total * 1.40, 2),
-        "dinheiro": round(valor_total, 2)
+        "dinheiro": round(valor_total * 1.10, 2)
     }
 
 def main():
@@ -79,7 +88,8 @@ def main():
 
         info = f"{fault_device} {model_device}"
 
-        produtos = Sugador(info, EMAIL, SENHA)
+        # Corrigido: passou model_device na chamada da função Sugador
+        produtos = Sugador(info, EMAIL, SENHA, model_device)
         if not produtos:
             print("Nenhum produto encontrado ou erro na busca.")
             continue
@@ -93,7 +103,7 @@ def main():
         valores = calcular_valores(preco_sel)
         print("\n💰 Valor final para o cliente (peça x 3):")
         print(f"1) Pix: R$ {valores['pix']:.2f}")
-        print(f"2) Cartão(até 10x sem juros): R$ {valores['cartao']:.2f}")
+        print(f"2) Cartão (até 10x sem juros): R$ {valores['cartao']:.2f}")
         print(f"3) Dinheiro: R$ {valores['dinheiro']:.2f}")
 
         continuar = input("\nDeseja fazer outra busca? (s/n): ").strip().lower()

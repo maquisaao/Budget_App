@@ -1,6 +1,7 @@
 import re
 import os
 import httpx
+import threading
 import tkinter as tk
 from tkinter import messagebox
 from bs4 import BeautifulSoup
@@ -53,7 +54,8 @@ def Sugador(info, email, senha, model_device):
             return produtos[:10]
 
     except Exception as e:
-        messagebox.showerror("Erro", f"Ocorreu um erro: {e}")
+        # Usar print aqui pois messagebox não pode ser chamado fora da thread principal
+        print(f"Erro no Sugador: {e}")
         return []
 
 def calcular_valores(preco_base):
@@ -73,17 +75,13 @@ class BudgetCellApp:
         largura = screen_width // 2
         altura = screen_height
 
-        # Posicionar a janela no canto direito da tela
         pos_x = screen_width - largura
         pos_y = 0
         root.geometry(f"{largura}x{altura}+{pos_x}+{pos_y}")
 
-        # Configurar expansão das colunas
-        root.grid_columnconfigure(1, weight=1)  # coluna 1 (onde ficam os Entry e Listbox) pode expandir
-
-        # Configurar expansão das linhas para os widgets que ocupam espaço vertical (exemplo: listbox e text)
-        root.grid_rowconfigure(3, weight=1)  # linha do frame da lista
-        root.grid_rowconfigure(5, weight=1)  # linha do resultado_text
+        root.grid_columnconfigure(1, weight=1)
+        root.grid_rowconfigure(3, weight=1)
+        root.grid_rowconfigure(5, weight=1)
 
         root.title("BudgetApp By Max")
 
@@ -118,13 +116,15 @@ class BudgetCellApp:
         self.btn_escolher = tk.Button(root, text="Escolher Produto", command=self.selecionar_produto)
         self.btn_escolher.grid(row=4, column=0, columnspan=2, pady=10)
 
-        # Frame para os valores à direita
         self.frame_valores = tk.Frame(root)
         self.frame_valores.grid(row=0, column=2, rowspan=6, padx=10, pady=10, sticky="n")
 
-        # Título dos valores
         self.lbl_valores_titulo = tk.Label(self.frame_valores, text="Valores para o cliente", font=("Arial", 14, "bold"))
         self.lbl_valores_titulo.pack(pady=(0,10))
+
+        # Label para mensagem de status
+        self.status_label = tk.Label(root, text="", fg="blue")
+        self.status_label.grid(row=6, column=0, columnspan=3, sticky="w", padx=5)
 
     def limpar_valores(self):
         for widget in self.frame_valores.winfo_children():
@@ -139,15 +139,29 @@ class BudgetCellApp:
             messagebox.showwarning("Aviso", "Por favor, preencha modelo e defeito.")
             return
 
+        # Mostrar mensagem de carregando
+        self.status_label.config(text="Carregando...")
+
+        # Desabilitar botão para evitar cliques múltiplos
+        self.btn_buscar.config(state=tk.DISABLED)
+
+        # Limpar lista e valores
         self.listbox.delete(0, tk.END)
         self.limpar_valores()
 
-        self.resultado_text = None  # remove resultado_text porque não vamos mais usar Text para resultado
+        # Rodar busca em thread para não travar GUI
+        threading.Thread(target=self.busca_thread, args=(defeito, modelo), daemon=True).start()
 
-
+    def busca_thread(self, defeito, modelo):
         info = f"{defeito} {modelo}"
-
         produtos = Sugador(info, EMAIL, SENHA, modelo)
+
+        # Atualizar GUI na thread principal
+        self.root.after(0, self.finalizar_busca, produtos)
+
+    def finalizar_busca(self, produtos):
+        self.status_label.config(text="")
+        self.btn_buscar.config(state=tk.NORMAL)
 
         self.entry_modelo.delete(0, tk.END)
         self.entry_defeito.delete(0, tk.END)
@@ -157,7 +171,6 @@ class BudgetCellApp:
             return
 
         self.produtos = produtos
-
         for i, (nome, preco) in enumerate(produtos, 1):
             self.listbox.insert(tk.END, f"R$ {preco:.2f} - {nome}")
 
@@ -174,9 +187,9 @@ class BudgetCellApp:
         self.limpar_valores()
 
         cores = {
-            "Pix": "#a0d468",        # verde claro
-            "Cartão": "#4a89dc",     # azul
-            "Dinheiro": "#ed5565"    # vermelho
+            "Pix": "#a0d468",
+            "Cartão": "#4a89dc",
+            "Dinheiro": "#ed5565"
         }
 
         for forma, valor in valores.items():

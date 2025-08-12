@@ -20,56 +20,84 @@
 
  ![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=maquisaao&layout=compact&theme=transparent&bg_color=000&title_color=E94D5F&text_color=FFF)
 
- # BudgetApp By Max
+ 📊 BudgetApp By Max
+BudgetApp é um aplicativo simples e intuitivo para consulta de preços de peças e serviços, desenvolvido com Python e Tkinter.
+O objetivo é permitir buscas rápidas e organizadas, com uma interface amigável e prática.
 
-**Orçamento rápido e prático para peças de celulares direto do fornecedor**
+✨ Funcionalidades
+Interface gráfica moderna com layout adaptável.
+
+Pesquisa rápida de modelos e defeitos.
+
+Campo de busca otimizado:
+
+Pressione Enter para iniciar a pesquisa.
+
+Botão Pesquisar para iniciar manualmente.
+
+Exibe mensagem de "Buscando..." durante a pesquisa.
+
+Exibição organizada dos resultados:
+
+Valores apresentados antes do texto.
+
+Itens exibidos em caixinhas coloridas na lateral direita da tela.
+
+Limpeza automática dos campos após cada busca.
+
+Login automático:
+
+Arquivo local armazena usuário e senha.
+
+O app inicia já autenticado sem precisar de login manual.
+
+Tela otimizada:
+
+Ocupa metade direita do monitor.
+
+Conteúdo adaptado ao tamanho da janela.
+
+Exportação como executável (.exe) para uso sem necessidade de instalar Python.
+
+🛠️ Tecnologias Utilizadas
+Python 3.x
+
+Tkinter (interface gráfica)
+
+Requests (requisições à API de busca)
+
+PyInstaller (empacotamento para executável)
 
 ---
+🚀 Como Executar (Modo Desenvolvedor)
+Clone o repositório:
+git clone https://github.com/seuusuario/budgetapp.git
+cd budgetapp
 
-## Sobre
+Instale as dependências:
+pip install -r requirements.txt
 
-O **BudgetApp By Max** é uma aplicação desktop desenvolvida em Python com interface gráfica Tkinter que facilita o processo de orçamentos de peças para conserto de celulares. A ferramenta automatiza a consulta dos preços direto do fornecedor via web scraping, calcula valores finais para o cliente com diferentes formas de pagamento e oferece uma interface simples para uso na loja.
+Execute:
+python app.py
 
----
+📦 Como Gerar o Executável
+Para criar o .exe:
+pyinstaller --onefile --noconsole app.py
 
-## Funcionalidades
+O executável será gerado na pasta dist/.
 
-- Consulta automática de produtos no site do fornecedor, com autenticação via login.
-- Busca por modelo do aparelho e defeito, retornando até 10 opções filtradas e ordenadas alfabeticamente.
-- Exibição dos resultados em uma lista com scrollbar para fácil navegação.
-- Seleção do produto desejado para cálculo automático dos valores finais.
-- Cálculo do preço final com multiplicador (peça x 3) e três opções de pagamento:
-  - **Pix:** preço com acréscimo de 15%
-  - **Cartão:** preço com acréscimo de 40%
-  - **Dinheiro:** preço com acréscimo de 10%
-- Visualização dos valores finais em caixinhas coloridas identificadas para melhor clareza.
-- Mensagem de "Carregando..." enquanto a consulta está sendo realizada, garantindo feedback para o usuário.
-- Interface responsiva, com suporte para pressionar ENTER para iniciar a busca.
-- Janela redimensionada para preencher metade da tela no lado direito, otimizando o espaço de trabalho.
+Importante: A pasta dist/ está listada no .gitignore para evitar envio ao GitHub.
 
----
+📂 Estrutura do Projeto
 
-## Tecnologias utilizadas
+budgetapp/
+│
+├── app.py              # Código principal
+├── login.txt           # Armazena login e senha para login automático
+├── requirements.txt    # Dependências do projeto
+├── dist/               # Executável gerado (ignorado no Git)
+└── README.md           # Documentação do projeto
 
-- Python 3.x
-- Tkinter (interface gráfica)
-- httpx (requisições HTTP)
-- BeautifulSoup (web scraping)
-- dotenv (gerenciamento de variáveis de ambiente)
-
----
-
-## Como usar
-
-1. Configure seu login do fornecedor no arquivo `.env` (variáveis `EMAIL_LOGIN` e `SENHA_LOGIN`).
-2. Execute o programa (`python budgetcell_gui.py`).
-3. Informe o modelo e defeito do aparelho e pressione ENTER ou clique em "Buscar Produtos".
-4. Aguarde a mensagem "Carregando..." enquanto os dados são consultados.
-5. Selecione o produto desejado na lista.
-6. Veja os valores finais para o cliente ao lado direito.
-7. Repita o processo para novos orçamentos.
-
----
 
 ## Possíveis melhorias futuras
 
@@ -81,6 +109,9 @@ O **BudgetApp By Max** é uma aplicação desktop desenvolvida em Python com int
 - Melhorar filtragem dos resultados com sugestões automáticas de modelos.
 
 ---
+
+📄 Licença
+Este projeto é de uso pessoal, mas pode ser adaptado e modificado conforme necessário.
 
 **Este projeto está em desenvolvimento e será atualizado com novas funcionalidades.**
 

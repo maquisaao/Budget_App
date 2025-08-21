@@ -60,10 +60,34 @@ def Sugador(info, email, senha, model_device):
 def calcular_valores(preco_base):
     valor_total = preco_base * 3
     return {
+        "Dinheiro": round(valor_total * 1.10, 2),
         "Pix": round(valor_total * 1.15, 2),
-        "Cartão": round(valor_total * 1.40, 2),
-        "Dinheiro": round(valor_total * 1.10, 2)
+        "Cartão": round(valor_total * 1.40, 2)
     }
+
+class PlaceholderEntry(tk.Entry):
+    """Entry com placeholder (texto dentro do campo)."""
+    def __init__(self, master=None, placeholder="Digite aqui", color="grey", **kwargs):
+        super().__init__(master, **kwargs)
+
+        self.placeholder = placeholder
+        self.placeholder_color = color
+        self.default_fg_color = self["fg"]
+
+        self.bind("<FocusIn>", self._clear_placeholder)
+        self.bind("<FocusOut>", self._add_placeholder)
+
+        self._add_placeholder()
+
+    def _clear_placeholder(self, event=None):
+        if self["fg"] == self.placeholder_color:
+            self.delete(0, tk.END)
+            self["fg"] = self.default_fg_color
+
+    def _add_placeholder(self, event=None):
+        if not self.get():
+            self.insert(0, self.placeholder)
+            self["fg"] = self.placeholder_color
 
 class BudgetCellApp:
     def __init__(self, root):
@@ -80,16 +104,16 @@ class BudgetCellApp:
 
         root.grid_columnconfigure(1, weight=1)
         root.grid_rowconfigure(3, weight=1)
-        root.grid_rowconfigure(5, weight=1)
 
         root.title("BudgetApp By Max")
 
+        # --- Campos com placeholder ---
         tk.Label(root, text="Modelo do aparelho:").grid(row=0, column=0, sticky="w", padx=5, pady=5)
-        self.entry_modelo = tk.Entry(root, width=40)
+        self.entry_modelo = PlaceholderEntry(root, width=50, placeholder="Digite o modelo do aparelho")
         self.entry_modelo.grid(row=0, column=1, padx=5, pady=5)
 
         tk.Label(root, text="Defeito:").grid(row=1, column=0, sticky="w", padx=5, pady=5)
-        self.entry_defeito = tk.Entry(root, width=40)
+        self.entry_defeito = PlaceholderEntry(root, width=50, placeholder="Digite o defeito")
         self.entry_defeito.grid(row=1, column=1, padx=5, pady=5)
 
         self.entry_modelo.bind('<Return>', lambda event: self.buscar_produtos())
@@ -122,14 +146,14 @@ class BudgetCellApp:
         self.lbl_valores_titulo.pack(pady=(0,10))
 
         self.status_label = tk.Label(root, text="", fg="blue")
-        self.status_label.grid(row=6, column=0, columnspan=3, sticky="w", padx=5)
+        self.status_label.grid(row=5, column=0, columnspan=3, sticky="w", padx=5)
 
-        # --- NOVO CAMPO PARA TEXTO FINAL ---
+        # --- Texto final AGORA LOGO ABAIXO DO ORÇAR ---
         self.texto_final = tk.Text(root, height=10, wrap="word")
-        self.texto_final.grid(row=7, column=0, columnspan=3, padx=5, pady=10, sticky="nsew")
+        self.texto_final.grid(row=6, column=0, columnspan=3, padx=5, pady=10, sticky="nsew")
 
         self.btn_copiar = tk.Button(root, text="Copiar Mensagem", command=self.copiar_texto)
-        self.btn_copiar.grid(row=8, column=0, columnspan=3, pady=5)
+        self.btn_copiar.grid(row=7, column=0, columnspan=3, pady=5)
 
     def limpar_valores(self):
         for widget in self.frame_valores.winfo_children():
@@ -140,7 +164,8 @@ class BudgetCellApp:
         modelo = self.entry_modelo.get().strip()
         defeito = self.entry_defeito.get().strip()
 
-        if not modelo or not defeito:
+        # Evita enviar placeholder como pesquisa
+        if modelo in ["Digite o modelo do aparelho", ""] or defeito in ["Digite o defeito", ""]:
             messagebox.showwarning("Aviso", "Por favor, preencha modelo e defeito.")
             return
 
@@ -181,12 +206,13 @@ class BudgetCellApp:
         self.limpar_valores()
 
         cores = {
+            "Dinheiro": "#ed5565",
             "Pix": "#a0d468",
-            "Cartão": "#4a89dc",
-            "Dinheiro": "#ed5565"
+            "Cartão": "#4a89dc"
         }
 
-        for forma, valor in valores.items():
+        for forma in ["Dinheiro", "Pix", "Cartão"]:
+            valor = valores[forma]
             frame_caixa = tk.Frame(self.frame_valores, bg=cores[forma], bd=2, relief="groove", padx=10, pady=10)
             frame_caixa.pack(fill='x', pady=5)
 
@@ -196,7 +222,6 @@ class BudgetCellApp:
             lbl_valor = tk.Label(frame_caixa, text=f"R$ {valor:.2f}", bg=cores[forma], fg="white", font=("Arial", 14))
             lbl_valor.pack(anchor='w')
 
-        # --- Atualizar texto final automático ---
         msg = (
             f"Vamos ter as seguintes opções pra esse modelo:\n\n"
             f"Qualidade Paralela (90 dias garantia): R$ {valores['Dinheiro']:.2f}\n"

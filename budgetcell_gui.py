@@ -54,7 +54,6 @@ def Sugador(info, email, senha, model_device):
             return produtos[:10]
 
     except Exception as e:
-        # Usar print aqui pois messagebox não pode ser chamado fora da thread principal
         print(f"Erro no Sugador: {e}")
         return []
 
@@ -113,7 +112,7 @@ class BudgetCellApp:
 
         self.listbox.bind('<Double-1>', self.selecionar_produto)
 
-        self.btn_escolher = tk.Button(root, text="Escolher Produto", command=self.selecionar_produto)
+        self.btn_escolher = tk.Button(root, text="Orçar", command=self.selecionar_produto)
         self.btn_escolher.grid(row=4, column=0, columnspan=2, pady=10)
 
         self.frame_valores = tk.Frame(root)
@@ -122,9 +121,15 @@ class BudgetCellApp:
         self.lbl_valores_titulo = tk.Label(self.frame_valores, text="Valores para o cliente", font=("Arial", 14, "bold"))
         self.lbl_valores_titulo.pack(pady=(0,10))
 
-        # Label para mensagem de status
         self.status_label = tk.Label(root, text="", fg="blue")
         self.status_label.grid(row=6, column=0, columnspan=3, sticky="w", padx=5)
+
+        # --- NOVO CAMPO PARA TEXTO FINAL ---
+        self.texto_final = tk.Text(root, height=10, wrap="word")
+        self.texto_final.grid(row=7, column=0, columnspan=3, padx=5, pady=10, sticky="nsew")
+
+        self.btn_copiar = tk.Button(root, text="Copiar Mensagem", command=self.copiar_texto)
+        self.btn_copiar.grid(row=8, column=0, columnspan=3, pady=5)
 
     def limpar_valores(self):
         for widget in self.frame_valores.winfo_children():
@@ -139,30 +144,20 @@ class BudgetCellApp:
             messagebox.showwarning("Aviso", "Por favor, preencha modelo e defeito.")
             return
 
-        # Mostrar mensagem de carregando
         self.status_label.config(text="Carregando...")
-
-        # Desabilitar botão para evitar cliques múltiplos
         self.btn_buscar.config(state=tk.DISABLED)
-
-        # Limpar lista e valores
         self.listbox.delete(0, tk.END)
         self.limpar_valores()
-
-        # Rodar busca em thread para não travar GUI
         threading.Thread(target=self.busca_thread, args=(defeito, modelo), daemon=True).start()
 
     def busca_thread(self, defeito, modelo):
         info = f"{defeito} {modelo}"
         produtos = Sugador(info, EMAIL, SENHA, modelo)
-
-        # Atualizar GUI na thread principal
         self.root.after(0, self.finalizar_busca, produtos)
 
     def finalizar_busca(self, produtos):
         self.status_label.config(text="")
         self.btn_buscar.config(state=tk.NORMAL)
-
         self.entry_modelo.delete(0, tk.END)
         self.entry_defeito.delete(0, tk.END)
 
@@ -183,7 +178,6 @@ class BudgetCellApp:
         nome, preco = self.produtos[index]
 
         valores = calcular_valores(preco)
-
         self.limpar_valores()
 
         cores = {
@@ -201,6 +195,29 @@ class BudgetCellApp:
 
             lbl_valor = tk.Label(frame_caixa, text=f"R$ {valor:.2f}", bg=cores[forma], fg="white", font=("Arial", 14))
             lbl_valor.pack(anchor='w')
+
+        # --- Atualizar texto final automático ---
+        msg = (
+            f"Vamos ter as seguintes opções pra esse modelo:\n\n"
+            f"Qualidade Paralela (90 dias garantia): R$ {valores['Dinheiro']:.2f}\n"
+            f"Qualidade Premium (6 meses garantia): R$ {valores['Pix']:.2f}\n"
+            f"Qualidade Original (1 ano garantia): R$ {valores['Cartão']:.2f}\n\n"
+            f"Tempo de serviço é de 2 horas e acompanha Película de Vidro 3D. "
+            f"Podendo ser parcelado em até 12x no cartão a depender da qualidade escolhida. "
+            f"Oferecemos também a possibilidade de Coleta e entrega do seu aparelho ou reparo no seu endereço.\n"
+            f"Valor válido por 24h"
+        )
+
+        self.texto_final.delete("1.0", tk.END)
+        self.texto_final.insert(tk.END, msg)
+
+    def copiar_texto(self):
+        texto = self.texto_final.get("1.0", tk.END).strip()
+        if texto:
+            self.root.clipboard_clear()
+            self.root.clipboard_append(texto)
+            self.root.update()  
+            messagebox.showinfo("Copiado", "Mensagem copiada para área de transferência!")
 
 if __name__ == "__main__":
     root = tk.Tk()

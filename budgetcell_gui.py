@@ -109,17 +109,17 @@ class BudgetCellApp:
 
         # --- Campos com placeholder ---
         tk.Label(root, text="Modelo do aparelho:").grid(row=0, column=0, sticky="w", padx=5, pady=5)
-        self.entry_modelo = PlaceholderEntry(root, width=50, placeholder="Digite o modelo do aparelho")
+        self.entry_modelo = PlaceholderEntry(root, width=50, placeholder="Modelo do aparelho: Ex: iPhone 8 Plus")
         self.entry_modelo.grid(row=0, column=1, padx=5, pady=5)
 
         tk.Label(root, text="Defeito:").grid(row=1, column=0, sticky="w", padx=5, pady=5)
-        self.entry_defeito = PlaceholderEntry(root, width=50, placeholder="Digite o defeito")
+        self.entry_defeito = PlaceholderEntry(root, width=50, placeholder="Defeito: (Ex: Tela)")
         self.entry_defeito.grid(row=1, column=1, padx=5, pady=5)
 
         self.entry_modelo.bind('<Return>', lambda event: self.buscar_produtos())
         self.entry_defeito.bind('<Return>', lambda event: self.buscar_produtos())
 
-        self.btn_buscar = tk.Button(root, text="Buscar Produtos", command=self.buscar_produtos)
+        self.btn_buscar = tk.Button(root, text="Buscar", command=self.buscar_produtos)
         self.btn_buscar.grid(row=2, column=0, columnspan=2, pady=10)
 
         frame_lista = tk.Frame(root)
@@ -136,13 +136,13 @@ class BudgetCellApp:
 
         self.listbox.bind('<Double-1>', self.selecionar_produto)
 
-        self.btn_escolher = tk.Button(root, text="Orçar", command=self.selecionar_produto)
+        self.btn_escolher = tk.Button(root, text="Gerar valores", command=self.selecionar_produto)
         self.btn_escolher.grid(row=4, column=0, columnspan=2, pady=10)
 
         self.frame_valores = tk.Frame(root)
         self.frame_valores.grid(row=0, column=2, rowspan=6, padx=10, pady=10, sticky="n")
 
-        self.lbl_valores_titulo = tk.Label(self.frame_valores, text="Valores para o cliente", font=("Arial", 14, "bold"))
+        self.lbl_valores_titulo = tk.Label(self.frame_valores, text="Valores a cobrar", font=("Arial", 14, "bold"))
         self.lbl_valores_titulo.pack(pady=(0,10))
 
         self.status_label = tk.Label(root, text="", fg="blue")
@@ -152,7 +152,7 @@ class BudgetCellApp:
         self.texto_final = tk.Text(root, height=10, wrap="word")
         self.texto_final.grid(row=6, column=0, columnspan=3, padx=5, pady=10, sticky="nsew")
 
-        self.btn_copiar = tk.Button(root, text="Copiar Mensagem", command=self.copiar_texto)
+        self.btn_copiar = tk.Button(root, text="COPIAR MENSAGEM", command=self.copiar_texto)
         self.btn_copiar.grid(row=7, column=0, columnspan=3, pady=5)
 
     def limpar_valores(self):
@@ -165,7 +165,7 @@ class BudgetCellApp:
         defeito = self.entry_defeito.get().strip()
 
         # Evita enviar placeholder como pesquisa
-        if modelo in ["Digite o modelo do aparelho", ""] or defeito in ["Digite o defeito", ""]:
+        if modelo in ["Modelo do aparelho: Ex: iPhone 8 Plus", ""] or defeito in ["Defeito: (Ex: Tela)", ""]:
             messagebox.showwarning("Aviso", "Por favor, preencha modelo e defeito.")
             return
 
@@ -227,7 +227,7 @@ class BudgetCellApp:
             f"Qualidade Paralela (90 dias garantia): R$ {valores['Dinheiro']:.2f}\n"
             f"Qualidade Premium (6 meses garantia): R$ {valores['Pix']:.2f}\n"
             f"Qualidade Original (1 ano garantia): R$ {valores['Cartão']:.2f}\n\n"
-            f"Tempo de serviço é de 2 horas e acompanha Película de Vidro 3D. "
+            f"Tempo de serviço é de aproximadamente 2 horas e acompanha Película de Vidro 3D. "
             f"Podendo ser parcelado em até 12x no cartão a depender da qualidade escolhida. "
             f"Oferecemos também a possibilidade de Coleta e entrega do seu aparelho ou reparo no seu endereço.\n"
             f"Valor válido por 24h"

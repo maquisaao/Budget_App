@@ -48,7 +48,7 @@ def Sugador(info, email, senha, model_device):
                         preco_float = float(preco_str.replace("R$", "").replace(".", "").replace(",", "."))
                     produtos.append((nome, preco_float))
 
-            # limitar a 3 resultados
+            # aqui posso escolher o limite de resultados (recomendo 10)
             return produtos[:10]
 
     except Exception as e:
@@ -113,3 +113,10 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+'''
+FUTURO: 
+Adicionar um menu pra configurar a margem de lucro (perdir % de lucro sobre o custo do produto e tambem pedir a % fica do cartao pra adicionar só no valor da opçao cartao)
+Criar uma maneira de marcar o valor escolhido de deixando livre as opçoes de custo (escolher o valor pra cada cartegoria separadamente)
+'''

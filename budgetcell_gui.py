@@ -54,7 +54,7 @@ def Sugador(info, email, senha, model_device):
             return produtos[:10]
 
     except Exception as e:
-        print(f"Erro no Sugador: {e}")
+        print(f"Verifique a conexao e tente novamente. {e}")
         return []
 
 def calcular_valores(preco_base):
@@ -66,7 +66,6 @@ def calcular_valores(preco_base):
     }
 
 class PlaceholderEntry(tk.Entry):
-    """Entry com placeholder (texto dentro do campo)."""
     def __init__(self, master=None, placeholder="Digite aqui", color="grey", **kwargs):
         super().__init__(master, **kwargs)
 
@@ -109,11 +108,11 @@ class BudgetCellApp:
 
         # --- Campos com placeholder ---
         tk.Label(root, text="Modelo do aparelho:").grid(row=0, column=0, sticky="w", padx=5, pady=5)
-        self.entry_modelo = PlaceholderEntry(root, width=50, placeholder="Modelo do aparelho: Ex: iPhone 8 Plus")
+        self.entry_modelo = PlaceholderEntry(root, width=50, placeholder="Exemplo: iPhone 12 Pro Max")
         self.entry_modelo.grid(row=0, column=1, padx=5, pady=5)
 
         tk.Label(root, text="Defeito:").grid(row=1, column=0, sticky="w", padx=5, pady=5)
-        self.entry_defeito = PlaceholderEntry(root, width=50, placeholder="Defeito: (Ex: Tela)")
+        self.entry_defeito = PlaceholderEntry(root, width=50, placeholder="Exemplo: Bateria, Tela, Tampa, etc")
         self.entry_defeito.grid(row=1, column=1, padx=5, pady=5)
 
         self.entry_modelo.bind('<Return>', lambda event: self.buscar_produtos())
@@ -165,11 +164,11 @@ class BudgetCellApp:
         defeito = self.entry_defeito.get().strip()
 
         # Evita enviar placeholder como pesquisa
-        if modelo in ["Modelo do aparelho: Ex: iPhone 8 Plus", ""] or defeito in ["Defeito: (Ex: Tela)", ""]:
-            messagebox.showwarning("Aviso", "Por favor, preencha modelo e defeito.")
+        if modelo in ["Exemplo: iPhone 12 Pro Max", ""] or defeito in ["Exemplo: Bateria, Tela, Tampa, etc", ""]:
+            messagebox.showwarning("Aviso", "Por favor, preencha os dois campos.")
             return
 
-        self.status_label.config(text="Carregando...")
+        self.status_label.config(text="CARREGANDO...")
         self.btn_buscar.config(state=tk.DISABLED)
         self.listbox.delete(0, tk.END)
         self.limpar_valores()

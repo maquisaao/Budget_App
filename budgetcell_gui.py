@@ -60,9 +60,9 @@ def Sugador(info, email, senha, model_device):
 def calcular_valores(preco_base):
     valor_total = preco_base * 3
     return {
-        "Dinheiro": round(valor_total * 1.10, 2),
-        "Pix": round(valor_total * 1.15, 2),
-        "Cartão": round(valor_total * 1.40, 2)
+        "Paralela": round(valor_total + 200, 2),
+        "Premium": round(valor_total + 200, 2),
+        "Original": round(valor_total + 200, 2)
     }
 
 class PlaceholderEntry(tk.Entry):
@@ -205,12 +205,12 @@ class BudgetCellApp:
         self.limpar_valores()
 
         cores = {
-            "Dinheiro": "#ed5565",
-            "Pix": "#a0d468",
-            "Cartão": "#4a89dc"
+            "Paralela": "#ed5565",
+            "Premium": "#a0d468",
+            "Original": "#4a89dc"
         }
 
-        for forma in ["Dinheiro", "Pix", "Cartão"]:
+        for forma in ["Paralela", "Premium", "Original"]:
             valor = valores[forma]
             frame_caixa = tk.Frame(self.frame_valores, bg=cores[forma], bd=2, relief="groove", padx=10, pady=10)
             frame_caixa.pack(fill='x', pady=5)
@@ -222,12 +222,12 @@ class BudgetCellApp:
             lbl_valor.pack(anchor='w')
 
         msg = (
-            f"Vamos ter as seguintes opções pra esse modelo:\n\n"
-            f"Qualidade Paralela (90 dias garantia): R$ {valores['Dinheiro']:.2f}\n"
-            f"Qualidade Premium (6 meses garantia): R$ {valores['Pix']:.2f}\n"
-            f"Qualidade Original (1 ano garantia): R$ {valores['Cartão']:.2f}\n\n"
+            f"✅ Perfeito, CLIENTE! Olhando o modelo e o defeito que você me falou, temos essas opções de peças:\n\n"
+            f"Qualidade Paralela - garantia de 3 meses - R$ 00.00: R$ {valores['PARALELA']:.2f}\n"
+            f"Qualidade Premium (6 meses garantia): R$ {valores['Premium']:.2f}\n"
+            f"Qualidade Original (1 ano garantia): R$ {valores['Original']:.2f}\n\n"
             f"Tempo de serviço é de aproximadamente 2 horas e acompanha Película de Vidro 3D. "
-            f"Podendo ser parcelado em até 12x no cartão a depender da qualidade escolhida. "
+            f"Podendo ser parcelado em até 12x no Original a depender da qualidade escolhida. "
             f"Oferecemos também a possibilidade de Coleta e entrega do seu aparelho ou reparo no seu endereço.\n"
             f"Valor válido por 24h"
         )

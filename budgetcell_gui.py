@@ -223,13 +223,23 @@ class BudgetCellApp:
 
         msg = (
             f"✅ Perfeito, CLIENTE! Olhando o modelo e o defeito que você me falou, temos essas opções de peças:\n\n"
-            f"Qualidade Paralela - garantia de 3 meses - R$ 00.00: R$ {valores['PARALELA']:.2f}\n"
-            f"Qualidade Premium (6 meses garantia): R$ {valores['Premium']:.2f}\n"
-            f"Qualidade Original (1 ano garantia): R$ {valores['Original']:.2f}\n\n"
-            f"Tempo de serviço é de aproximadamente 2 horas e acompanha Película de Vidro 3D. "
-            f"Podendo ser parcelado em até 12x no Original a depender da qualidade escolhida. "
-            f"Oferecemos também a possibilidade de Coleta e entrega do seu aparelho ou reparo no seu endereço.\n"
-            f"Valor válido por 24h"
+
+            f"Qualidade Paralela - garantia de 3 meses - R$ {valores['Paralela']:.2f}\n"
+            "Essa escolha é pra quem procura o preço mais baixo, na maioria dos casos essa qualidade não tem os sensores \
+            de biometria e/ou proximidade. Recomendado para quem precisa de uma peça 'quebra-galho.\n\n"
+
+            f"Qualidade Premium – garantia de 6 meses – R$ {valores['Premium']:.2f}\n" 
+            "As peças premium são aquelas com as mesmas especificações técnicas da Original mas fabricados por outra empresa \
+            e tem o intuito de entregar toda funcionalidade do aparelho mas com uma qualidade e durabilidade menores. Boa \
+            opção se você pensa em trocar de celular em até 1 ano e não quer perder valor de mercado quando for vender.\n\n"
+
+            f"Qualidade Original – garantia de 1 ano – R$ {valores['Original']:.2f}\n"
+            "Melhor qualidade possível, além de ter a melhor garantia do mercado, você conta com um melhor acabamento e \
+            maior durabilidade pro seu celular. É a melhor escolha se você pretende dar uso por mais alguns anos ao \
+            seu aparelho.\n\n"
+
+            "Tempo de serviço é de aproximadamente 2 horas e acompanha Película de Vidro 3D. Podendo ser parcelado em até 12x no cartão de crédito. Oferecemos também a possibilidade de COLETA E ENTREGA do seu aparelho ou REPARO NO SEU ENDEREÇO.\n"
+            "Orçamento válido por 24h"
         )
 
         self.texto_final.delete("1.0", tk.END)

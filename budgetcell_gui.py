@@ -58,11 +58,10 @@ def Sugador(info, email, senha, model_device):
         return []
 
 def calcular_valores(preco_base):
-    valor_total = preco_base * 3
     return {
-        "Paralela": round(valor_total + 200, 2),
-        "Premium": round(valor_total + 200, 2),
-        "Original": round(valor_total + 200, 2)
+        "Paralela": round(preco_base + 200, 2),
+        "Premium": round(preco_base + 300, 2),
+        "Original": round(preco_base + 300, 2)
     }
 
 class PlaceholderEntry(tk.Entry):
@@ -105,6 +104,9 @@ class BudgetCellApp:
         root.grid_rowconfigure(3, weight=1)
 
         root.title("BudgetApp By Max")
+        
+        # --- Guardar valores fixados ---
+        self.valores_fixados = {"Paralela": None, "Premium": None, "Original": None}
 
         # --- Campos com placeholder ---
         tk.Label(root, text="Modelo do aparelho:").grid(row=0, column=0, sticky="w", padx=5, pady=5)
@@ -119,7 +121,10 @@ class BudgetCellApp:
         self.entry_defeito.bind('<Return>', lambda event: self.buscar_produtos())
 
         self.btn_buscar = tk.Button(root, text="Buscar", command=self.buscar_produtos)
-        self.btn_buscar.grid(row=2, column=0, columnspan=2, pady=10)
+        self.btn_buscar.grid(row=2, column=0, pady=10, sticky="ew", padx=(5,0))
+
+        self.btn_reiniciar = tk.Button(root, text="Reiniciar", command=self.reiniciar)
+        self.btn_reiniciar.grid(row=2, column=1, pady=10, sticky="ew", padx=(0,5))
 
         frame_lista = tk.Frame(root)
         frame_lista.grid(row=3, column=0, columnspan=2, padx=5, pady=5, sticky="nsew")
@@ -151,7 +156,7 @@ class BudgetCellApp:
         self.texto_final = tk.Text(root, height=10, wrap="word")
         self.texto_final.grid(row=6, column=0, columnspan=3, padx=5, pady=10, sticky="nsew")
 
-        self.btn_copiar = tk.Button(root, text="COPIAR MENSAGEM", command=self.copiar_texto)
+        self.btn_copiar = tk.Button(root, text="GERAR E COPIAR MENSAGEM", command=self.copiar_texto)
         self.btn_copiar.grid(row=7, column=0, columnspan=3, pady=5)
 
     def limpar_valores(self):
@@ -211,47 +216,68 @@ class BudgetCellApp:
         }
 
         for forma in ["Paralela", "Premium", "Original"]:
-            valor = valores[forma]
+            # Se já existe valor fixado, usa ele
+            valor_mostrar = self.valores_fixados[forma] if self.valores_fixados[forma] is not None else valores[forma]
+
             frame_caixa = tk.Frame(self.frame_valores, bg=cores[forma], bd=2, relief="groove", padx=10, pady=10)
             frame_caixa.pack(fill='x', pady=5)
 
             lbl_forma = tk.Label(frame_caixa, text=forma, bg=cores[forma], fg="white", font=("Arial", 12, "bold"))
             lbl_forma.pack(anchor='w')
 
-            lbl_valor = tk.Label(frame_caixa, text=f"R$ {valor:.2f}", bg=cores[forma], fg="white", font=("Arial", 14))
+            lbl_valor = tk.Label(frame_caixa, text=f"R$ {valor_mostrar:.2f}", bg=cores[forma], fg="white", font=("Arial", 14))
             lbl_valor.pack(anchor='w')
+
+            # Botão fixar atualiza valores_fixados
+            btn_fixar = tk.Button(frame_caixa, text="Fixar", 
+                                  command=lambda f=forma, v=valor_mostrar: self.fixar_valor(f, v))
+            btn_fixar.pack(anchor='e', pady=5)
+
+        # Habilitar botão de copiar apenas se todos os 3 valores estiverem fixados
+        self.btn_copiar.config(state=tk.NORMAL if all(v is not None for v in self.valores_fixados.values()) else tk.DISABLED)
+
+
+    def fixar_valor(self, forma, valor):
+        self.valores_fixados[forma] = valor
+        self.selecionar_produto()  # Atualiza os cards para mostrar os valores fixados
+
+    def copiar_texto(self):
+        if not all(v is not None for v in self.valores_fixados.values()):
+            messagebox.showwarning("Aviso", "Fixe todos os valores antes de gerar a mensagem.")
+            return
 
         msg = (
             f"✅ Perfeito, CLIENTE! Olhando o modelo e o defeito que você me falou, temos essas opções de peças:\n\n"
-
-            f"Qualidade Paralela - garantia de 3 meses - R$ {valores['Paralela']:.2f}\n"
+            f"Qualidade Paralela - garantia de 3 meses - R$ {self.valores_fixados['Paralela']:.2f}\n"
             "Essa escolha é pra quem procura o preço mais baixo, na maioria dos casos essa qualidade não tem os sensores \
-            de biometria e/ou proximidade. Recomendado para quem precisa de uma peça 'quebra-galho.\n\n"
-
-            f"Qualidade Premium – garantia de 6 meses – R$ {valores['Premium']:.2f}\n" 
+de biometria e/ou proximidade. Recomendado para quem precisa de uma peça 'quebra-galho.\n\n"
+            f"Qualidade Premium – garantia de 6 meses – R$ {self.valores_fixados['Premium']:.2f}\n" 
             "As peças premium são aquelas com as mesmas especificações técnicas da Original mas fabricados por outra empresa \
-            e tem o intuito de entregar toda funcionalidade do aparelho mas com uma qualidade e durabilidade menores. Boa \
-            opção se você pensa em trocar de celular em até 1 ano e não quer perder valor de mercado quando for vender.\n\n"
-
-            f"Qualidade Original – garantia de 1 ano – R$ {valores['Original']:.2f}\n"
+e tem o intuito de entregar toda funcionalidade do aparelho mas com uma qualidade e durabilidade menores. Boa \
+opção se você pensa em trocar de celular em até 1 ano e não quer perder valor de mercado quando for vender.\n\n"
+            f"Qualidade Original – garantia de 1 ano – R$ {self.valores_fixados['Original']:.2f}\n"
             "Melhor qualidade possível, além de ter a melhor garantia do mercado, você conta com um melhor acabamento e \
-            maior durabilidade pro seu celular. É a melhor escolha se você pretende dar uso por mais alguns anos ao \
-            seu aparelho.\n\n"
-
+maior durabilidade pro seu celular. É a melhor escolha se você pretende dar uso por mais alguns anos ao \
+seu aparelho.\n\n"
             "Tempo de serviço é de aproximadamente 2 horas e acompanha Película de Vidro 3D. Podendo ser parcelado em até 12x no cartão de crédito. Oferecemos também a possibilidade de COLETA E ENTREGA do seu aparelho ou REPARO NO SEU ENDEREÇO.\n"
             "Orçamento válido por 24h"
         )
 
         self.texto_final.delete("1.0", tk.END)
         self.texto_final.insert(tk.END, msg)
+        self.root.clipboard_clear()
+        self.root.clipboard_append(msg)
+        self.root.update()
+        messagebox.showinfo("Copiado", "Mensagem copiada para área de transferência!")
 
-    def copiar_texto(self):
-        texto = self.texto_final.get("1.0", tk.END).strip()
-        if texto:
-            self.root.clipboard_clear()
-            self.root.clipboard_append(texto)
-            self.root.update()  
-            messagebox.showinfo("Copiado", "Mensagem copiada para área de transferência!")
+    def reiniciar(self):
+        self.entry_modelo.delete(0, tk.END)
+        self.entry_defeito.delete(0, tk.END)
+        self.listbox.delete(0, tk.END)
+        self.limpar_valores()
+        self.texto_final.delete("1.0", tk.END)
+        self.valores_fixados = {"Paralela": None, "Premium": None, "Original": None}
+        self.btn_copiar.config(state=tk.DISABLED)
 
 if __name__ == "__main__":
     root = tk.Tk()
